@@ -1,0 +1,80 @@
+# L'antre du capricorne : environnement de développement (phase 1)
+#
+# Règle d'architecture : seul le webapp est joignable depuis l'extérieur.
+# Les autres services vivent sur un réseau "internal" sans accès extérieur.
+
+name: antre-du-capricorne
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_USER: ${POSTGRES_USER:?définis POSTGRES_USER dans .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?définis POSTGRES_PASSWORD dans .env}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d users"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [internal]
+    # Pas de "ports:" : la base n'est PAS exposée. Pour l'inspecter, utilise
+    #   docker compose exec postgres psql -U <utilisateur> -d users
+
+  users-service:
+    build:
+      context: .
+      dockerfile: users-service/Dockerfile
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/users
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?définis INTERNAL_SECRET dans .env}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 40s
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    mem_limit: 512m
+    networks: [internal]
+    # Pas de "ports:" : joignable uniquement par le webapp.
+
+  webapp:
+    build:
+      context: .
+      dockerfile: webapp/Dockerfile
+    environment:
+      USERS_SERVICE_URL: http://users-service:8081
+      INTERNAL_SECRET: ${INTERNAL_SECRET}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    depends_on:
+      users-service:
+        condition: service_healthy
+    ports:
+      - "8080:8080"   # seul port publié
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 40s
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    mem_limit: 512m
+    networks: [internal, edge]
+
+networks:
+  internal:
+    internal: true   # aucun accès depuis ou vers l'extérieur
+  edge: {}           # réseau qui permet de publier le port du webapp
+
+volumes:
+  postgres-data:

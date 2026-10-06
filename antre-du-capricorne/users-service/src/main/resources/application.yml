@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: users-service
+
+  # Aucune valeur par défaut pour la connexion : si une variable manque,
+  # le service refuse de démarrer plutôt que d'utiliser un secret faible.
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Flyway possède le schéma ; Hibernate se contente de le vérifier.
+      ddl-auto: validate
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8081
+  shutdown: graceful
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+
+management:
+  # Seul "health" est exposé (utilisé par le healthcheck Docker), sans aucun détail.
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never

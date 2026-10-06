@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: webapp
+
+server:
+  port: 8080
+  shutdown: graceful
+  # Ne jamais renvoyer de détails techniques au navigateur
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+  servlet:
+    session:
+      cookie:
+        http-only: true                     # illisible par JavaScript (limite l'impact d'une faille XSS)
+        secure: ${COOKIE_SECURE:false}      # true en production (HTTPS) : le cookie ne voyage jamais en clair
+        same-site: lax                      # le cookie n'est pas envoyé par les sites tiers (limite le CSRF)
+
+management:
+  # Seul "health" est exposé (utilisé par le healthcheck Docker), sans aucun détail.
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never

@@ -1,0 +1,17 @@
+# Secrets : ne jamais versionner
+.env
+
+# Maven
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Système
+.DS_Store
+Thumbs.db
