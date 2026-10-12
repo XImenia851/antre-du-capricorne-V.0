@@ -15,7 +15,7 @@ Documentation : [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) et le cahier des 
 
 ```bash
 # 1. Créer le fichier de secrets (il est ignoré par Git : ne le versionne jamais)
-cp .env .env
+cp .env.example .env
 #    puis remplace TOUTES les valeurs :
 #      openssl rand -base64 24   -> POSTGRES_PASSWORD
 #      openssl rand -hex 32      -> INTERNAL_SECRET
@@ -29,8 +29,8 @@ docker compose up --build
 ## Vérifier que l'isolation fonctionne
 
 ```bash
-curl -I http://localhost:8080            # le webapp répond : OK
-curl --max-time 3 http://localhost:8081  # users-service : doit ÉCHOUER (non publié)
+curl.exe -I http://localhost:8080          # PowerShell : curl.exe (curl seul est un alias différent)
+curl.exe --max-time 3 http://localhost:8081  # users-service : doit ÉCHOUER (non publié)
 docker compose ps                        # seul le webapp doit afficher un port publié (8080)
 ```
 
@@ -71,7 +71,7 @@ Phase 1 (squelette) :
 - [x] Parent Maven, modules `webapp` et `users-service`
 - [x] `docker-compose.yml` (PostgreSQL, réseaux, un seul port publié)
 - [x] Migration `V1` : table des utilisateurs
-- [ ] `users-service` : inscription, hash du mot de passe, vérification des identifiants, validation (REGEX)
-- [ ] `webapp` : Spring Security (inscription, connexion, session, CSRF)
+- [x] `users-service` : inscription, hash BCrypt, vérification des identifiants, validation (REGEX)
+- [x] `webapp` : Spring Security (inscription, connexion, session, CSRF, limite de tentatives, CSP)
 - [ ] Secret interne entre `webapp` et `users-service`
 - [ ] Tests (validation, accès refusé sans connexion, Testcontainers)

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Inscription | L’antre du capricorne', 'Crée ton compte pour garder tes cartes favorites.', 'noindex,nofollow')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container narrow">
+    <h1>Inscription</h1>
+
+    <!--
+      Les attributs required / minlength du HTML sont un confort : n'importe qui peut les contourner.
+      La vraie validation est faite côté serveur (RegistrationForm, puis users-service).
+    -->
+    <form th:action="@{/inscription}" th:object="${form}" method="post" class="card form" novalidate>
+        <div class="error" role="alert" th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Erreur</p>
+        </div>
+
+        <label for="pseudo">Pseudo</label>
+        <input id="pseudo" type="text" th:field="*{pseudo}" required minlength="3" maxlength="30" autocomplete="username">
+        <p class="hint">3 à 30 caractères : lettres sans accent, chiffres, _ ou -.</p>
+        <p class="field-error" th:if="${#fields.hasErrors('pseudo')}" th:errors="*{pseudo}">Erreur</p>
+
+        <label for="email">Adresse e-mail</label>
+        <input id="email" type="email" th:field="*{email}" required maxlength="254" autocomplete="email">
+        <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Erreur</p>
+
+        <!-- Pas de th:field sur les mots de passe : on ne les renvoie JAMAIS dans la page. -->
+        <label for="password">Mot de passe</label>
+        <input id="password" name="password" type="password" required minlength="12" maxlength="72" autocomplete="new-password">
+        <p class="hint">12 caractères minimum. Une phrase de passe est idéale.</p>
+        <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Erreur</p>
+
+        <label for="passwordConfirm">Confirme le mot de passe</label>
+        <input id="passwordConfirm" name="passwordConfirm" type="password" required maxlength="72" autocomplete="new-password">
+        <p class="field-error" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">Erreur</p>
+
+        <button type="submit" class="button">Créer mon compte</button>
+    </form>
+    <p class="muted">Déjà inscrit·e ? <a th:href="@{/connexion}">Connecte-toi</a>.</p>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

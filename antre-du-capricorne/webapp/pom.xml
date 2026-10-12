@@ -29,7 +29,20 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Spring Security et Validation seront ajoutés aux étapes 3 et 4, de façon volontaire. -->
+        <!-- Étape 4 : sécurité et validation des formulaires -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- JSON (Jackson 3) : nécessaire au client HTTP qui parle à users-service -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jackson</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

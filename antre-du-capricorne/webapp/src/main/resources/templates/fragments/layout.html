@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<!--
+  Morceaux de page réutilisés partout : <head>, en-tête et pied de page.
+  Rappel CSP : aucun style="" ni <script> écrit dans la page. Tout passe par /css et /js.
+-->
+<head th:fragment="head(title, description, robots)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">L’antre du capricorne</title>
+    <meta name="description" th:content="${description}" content="Grimoire de sorcière numérique">
+    <meta name="robots" th:content="${robots}" content="index,follow">
+    <meta name="theme-color" content="#2a1b3d">
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+<header class="site-header" th:fragment="header">
+    <a class="brand" th:href="@{/}">L’antre du capricorne</a>
+    <nav class="site-nav" aria-label="Navigation principale">
+        <th:block th:if="${currentUser == null}">
+            <a th:href="@{/connexion}">Connexion</a>
+            <a class="button button-small" th:href="@{/inscription}">Inscription</a>
+        </th:block>
+        <th:block th:if="${currentUser != null}">
+            <a th:href="@{/compte}" th:text="${currentUser.pseudo}">Pseudo</a>
+            <a th:if="${currentUser.role == 'ADMIN'}" th:href="@{/admin}">Admin</a>
+            <form th:action="@{/deconnexion}" method="post" class="inline-form">
+                <button type="submit" class="button button-small button-ghost">Déconnexion</button>
+            </form>
+        </th:block>
+    </nav>
+</header>
+<footer class="site-footer" th:fragment="footer">
+    <p>L’antre du capricorne · un grimoire numérique</p>
+</footer>
+</body>
+</html>

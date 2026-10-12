@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Mon compte | L’antre du capricorne', 'Ton espace personnel.', 'noindex,nofollow')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container narrow">
+    <h1>Bienvenue, <span th:text="${currentUser.pseudo}">pseudo</span></h1>
+    <p class="lead">Tes cartes favorites apparaîtront ici.</p>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

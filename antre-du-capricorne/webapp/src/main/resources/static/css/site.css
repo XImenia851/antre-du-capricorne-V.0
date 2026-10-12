@@ -1,0 +1,89 @@
+/* L'antre du capricorne : feuille de style principale.
+   Servie depuis notre propre serveur : la politique de sécurité (CSP) interdit les styles écrits dans les pages. */
+
+:root {
+    --bg: #1d1229;
+    --bg-soft: #2a1b3d;
+    --card: #33224a;
+    --gold: #c9a24d;
+    --text: #f3ebdd;
+    --muted: #b9aecb;
+    --danger: #ff9b9b;
+    --ok: #9fe0b0;
+    --radius: 14px;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at 50% -10%, var(--bg-soft), var(--bg) 60%);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+}
+
+h1 { font-family: var(--serif); color: var(--gold); font-size: clamp(1.8rem, 5vw, 2.8rem); margin: 0 0 1rem; line-height: 1.2; }
+a { color: var(--gold); }
+a:hover { color: #e6c880; }
+
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+/* ---------- En-tête et pied de page ---------- */
+.site-header {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1rem clamp(1rem, 4vw, 2.5rem);
+    border-bottom: 1px solid rgba(201, 162, 77, .25);
+}
+.brand { font-family: var(--serif); font-size: 1.4rem; color: var(--gold); text-decoration: none; }
+.site-nav { display: flex; align-items: center; gap: 1.2rem; }
+.site-nav a { text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+.inline-form { margin: 0; }
+
+.site-footer { margin-top: auto; padding: 1.5rem; text-align: center; color: var(--muted); font-size: .9rem; }
+
+/* ---------- Mise en page ---------- */
+.container { width: 100%; max-width: 64rem; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2.5rem); }
+.container.narrow { max-width: 30rem; }
+.hero { text-align: center; padding: 4rem 0; }
+.lead { font-size: 1.15rem; color: var(--muted); }
+.muted { color: var(--muted); }
+
+/* ---------- Cartes et formulaires ---------- */
+.card { background: var(--card); border: 1px solid rgba(201, 162, 77, .25); border-radius: var(--radius); padding: 1.5rem; }
+.form { display: flex; flex-direction: column; gap: .4rem; }
+.form label { margin-top: .8rem; font-weight: 600; }
+.form input {
+    width: 100%; padding: .75rem .9rem; font: inherit; color: var(--text);
+    background: var(--bg); border: 1px solid rgba(243, 235, 221, .35); border-radius: 10px;
+}
+.form input:focus { border-color: var(--gold); }
+.hint { margin: 0; font-size: .85rem; color: var(--muted); }
+.field-error { margin: 0; font-size: .9rem; color: var(--danger); }
+
+/* ---------- Boutons ---------- */
+.button {
+    display: inline-block; margin-top: 1.2rem; padding: .75rem 1.4rem; font: inherit; font-weight: 600;
+    color: #1d1229; background: var(--gold); border: 2px solid var(--gold); border-radius: 999px;
+    text-decoration: none; cursor: pointer; transition: background .2s, transform .2s;
+}
+.button:hover { background: #e6c880; color: #1d1229; transform: translateY(-1px); }
+.button-small { margin-top: 0; padding: .35rem 1rem; }
+.button-ghost { background: transparent; color: var(--gold); }
+.button-ghost:hover { background: rgba(201, 162, 77, .15); color: var(--gold); }
+
+/* ---------- Messages ---------- */
+.notice, .error { padding: .8rem 1rem; border-radius: 10px; margin: 0 0 1rem; }
+.notice { background: rgba(159, 224, 176, .12); border: 1px solid var(--ok); color: var(--ok); }
+.error { background: rgba(255, 155, 155, .1); border: 1px solid var(--danger); color: var(--danger); }
+.error p { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}

@@ -28,3 +28,7 @@ management:
       probes:
         enabled: true
       show-details: never
+
+# Adresse du users-service (réseau Docker interne). En local hors Docker : http://localhost:8081
+users-service:
+  url: ${USERS_SERVICE_URL:http://localhost:8081}
