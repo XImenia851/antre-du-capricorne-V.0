@@ -28,7 +28,16 @@ public class UsersClient {
 
     private final RestClient client;
 
-    public UsersClient(@Value("${users-service.url}") String baseUrl) {
+    /** Même nom d'en-tête que dans users-service (InternalSecretFilter). */
+    static final String SECRET_HEADER = "X-Internal-Secret";
+
+    public UsersClient(@Value("${users-service.url}") String baseUrl,
+                       @Value("${internal.secret}") String internalSecret) {
+        // Même exigence que côté users-service : on refuse de démarrer avec un secret faible.
+        if (internalSecret == null || internalSecret.length() < 32) {
+            throw new IllegalStateException(
+                    "INTERNAL_SECRET doit faire au moins 32 caractères. Génère-en un nouveau dans ton fichier .env.");
+        }
         HttpClient httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(2))
@@ -38,6 +47,8 @@ public class UsersClient {
 
         this.client = RestClient.builder()
                 .baseUrl(baseUrl)
+                // Ajouté automatiquement à CHAQUE appel vers users-service : prouve que l'appel vient de nous.
+                .defaultHeader(SECRET_HEADER, internalSecret)
                 .requestFactory(factory)
                 .build();
     }

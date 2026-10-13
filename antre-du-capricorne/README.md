@@ -73,5 +73,5 @@ Phase 1 (squelette) :
 - [x] Migration `V1` : table des utilisateurs
 - [x] `users-service` : inscription, hash BCrypt, vérification des identifiants, validation (REGEX)
 - [x] `webapp` : Spring Security (inscription, connexion, session, CSRF, limite de tentatives, CSP)
-- [ ] Secret interne entre `webapp` et `users-service`
+- [x] Secret interne entre `webapp` et `users-service` (en-tête `X-Internal-Secret`, 32 caractères minimum)
 - [ ] Tests (validation, accès refusé sans connexion, Testcontainers)

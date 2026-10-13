@@ -32,3 +32,8 @@ management:
 # Adresse du users-service (réseau Docker interne). En local hors Docker : http://localhost:8081
 users-service:
   url: ${USERS_SERVICE_URL:http://localhost:8081}
+
+# Secret partagé avec users-service (envoyé dans l'en-tête X-Internal-Secret).
+# Aucune valeur par défaut : s'il manque, la webapp refuse de démarrer.
+internal:
+  secret: ${INTERNAL_SECRET}
