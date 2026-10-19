@@ -2,7 +2,9 @@ package fr.antrecapricorne.webapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,11 +32,24 @@ public class SecurityConfig {
         return new LoginAttemptService(5, Duration.ofMinutes(15), Clock.systemUTC());
     }
 
+    /**
+     * Le gestionnaire d'authentification, construit à la main avec UN SEUL fournisseur : le nôtre.
+     *
+     * <p>Pourquoi explicite ? Spring Security sait aussi détecter tout seul un fournisseur déclaré
+     * comme bean ; si on le lui donne en plus à la main, il l'enregistre deux fois et le consulte
+     * deux fois à chaque connexion (deux appels à users-service, deux échecs comptés). C'est un bug
+     * que les tests ont révélé : ici, il ne peut plus se produire.</p>
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(UsersAuthenticationProvider authenticationProvider) {
+        return new ProviderManager(authenticationProvider);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   UsersAuthenticationProvider authenticationProvider) throws Exception {
+                                                   AuthenticationManager authenticationManager) throws Exception {
         http
-                .authenticationProvider(authenticationProvider)
+                .authenticationManager(authenticationManager)
 
                 // ---- Qui a le droit d'aller où ? (les règles sont lues de haut en bas) ----
                 .authorizeHttpRequests(auth -> auth

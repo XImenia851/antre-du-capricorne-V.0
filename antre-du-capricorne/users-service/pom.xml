@@ -69,6 +69,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Vraie base PostgreSQL jetable pour les tests d'intégration (nécessite Docker allumé).
+             Testcontainers 2.x : les modules s'appellent « testcontainers-<module> ».
+             La version est fixée par Spring Boot : on ne la précise pas. -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
